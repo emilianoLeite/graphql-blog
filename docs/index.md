@@ -1,7 +1,5 @@
----
 gems:
   - jekyll-readme-index
----
 
 
 # Daily Progress Blog
