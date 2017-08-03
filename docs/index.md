@@ -16,3 +16,10 @@ Depois de pensar um pouco sobre o problema lembrei que o principal objetivo do e
 Baixei a aplicação em `.zip` na minha máquina de casa (Windows) e depois upei pra Cloud9 IDE.
 
 Prevejo que o maior problema vai ser instalar/setar o mongo na máquina da Cloud9, que é o que estou tentando fazer agora.
+
+---- 
+Aparentemente não houveram problemas pra instalar o mongo (awyiss).
+
+Os próximos passos são:
+* Instalar alguma gem graphql e expor algum model através do GraphQL
+* Teste automatizado pra ver se tá funcionando mesmo
