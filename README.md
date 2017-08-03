@@ -31,3 +31,17 @@ Os próximos passos são:
 
 ## Day 2 (03/08)
 Acho que conseguiria instalar a gem e ir tentando até ter algo minimamente funcional, mas se a base teórica por trás, não conseguiria explicar pra ninguém as motivações e considerações a se tomar numa migração para GraphQL. Portanto nos dias seguintes pretendo estar a std-doc do GraphQL pra me familiarizar com os termos e entender um pouco mais sobre as motivações e objetivos do GraphQL, antes de sair codando.
+
+----
+Depois de ver os primeiros 3 vídeos de introdução do site [How To GraphQL](https://www.howtographql.com/), aprendi algumas coisas interessantes
+* REST pode os problemas:
+  * Overfetching: Você precisa do nome do usuário, dá um `/users/:id` e o endpoint te retorna **todos** os campos do usuário (nome, idade, email...);
+  * Underfetching: Você precisa do nome de todos posts de um autor, mas ao fazer `/authors/:id`, o endpoint apenas te retorna `post_ids`(ou nem isso). Consequentemente você precisa fazer um novo request para `/authors/:id/posts` para pegar os respectivos nomes.
+
+Também aprendi que o Schema do GraphQL tem 3 Root Types:
+  * Query: o **R** do C**R**UD;
+  * Mutation: serve para **C**R**UD**;
+  * Subscription: (me surpreendeu) parece ser um canal aberto onde o server pusha novos eventos para o cliente. O vídeo não explicou como isso funciona por debaixo dos panos
+
+Já que falei de Schema, é bom explicar um pouco mais:    
+GraphQL depende de Schemas, que funcionam como contratos, para definir quais são as operações possíveis/permitidas. Um schema é fortemente tipado, ou seja, ele é composto de exclusivamente de Tipos bem definidos. Os 3 Tipos especiais já foram citados acima, de resto, qualquer coisa pode ser um Tipo, e deduzo que isso se mapeia direta mas não exclusivamente com os models/collections da sua aplicação.
