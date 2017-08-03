@@ -28,3 +28,6 @@ Aparentemente não houveram problemas pra instalar o mongo (awyiss).
 Os próximos passos são:
 * Instalar alguma gem graphql e expor algum model através do GraphQL
 * Teste automatizado pra ver se tá funcionando mesmo
+
+## Day 2 (03/08)
+Acho que conseguiria instalar a gem e ir tentando até ter algo minimamente funcional, mas se a base teórica por trás, não conseguiria explicar pra ninguém as motivações e considerações a se tomar numa migração para GraphQL. Portanto nos dias seguintes pretendo estar a std-doc do GraphQL pra me familiarizar com os termos e entender um pouco mais sobre as motivações e objetivos do GraphQL, antes de sair codando.
