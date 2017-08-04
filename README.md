@@ -38,10 +38,14 @@ Depois de ver os primeiros 3 vídeos de introdução do site [How To GraphQL](ht
   * Overfetching: Você precisa do nome do usuário, dá um `/users/:id` e o endpoint te retorna **todos** os campos do usuário (nome, idade, email...);
   * Underfetching: Você precisa do nome de todos posts de um autor, mas ao fazer `/authors/:id`, o endpoint apenas te retorna `post_ids`(ou nem isso). Consequentemente você precisa fazer um novo request para `/authors/:id/posts` para pegar os respectivos nomes.
 
-Também aprendi que o Schema do GraphQL tem 3 Root Types:
+Também aprendi que o Schema do GraphQL tem 3 **Root Types**:
   * Query: o **R** do C**R**UD;
   * Mutation: serve para **C**R**UD**;
   * Subscription: (me surpreendeu) parece ser um canal aberto onde o server pusha novos eventos para o cliente. O vídeo não explicou como isso funciona por debaixo dos panos
 
 Já que falei de Schema, é bom explicar um pouco mais:    
 GraphQL depende de Schemas, que funcionam como contratos, para definir quais são as operações possíveis/permitidas. Um schema é fortemente tipado, ou seja, ele é composto de exclusivamente de Tipos bem definidos. Os 3 Tipos especiais já foram citados acima, de resto, qualquer coisa pode ser um Tipo, e deduzo que isso se mapeia direta mas não exclusivamente com os models/collections da sua aplicação.
+
+## Day 3
+Ouvindo o podcast [GraphQL Radio](https://graphqlradio.com/), aprendi que a migração incremental REST -> GraphQL pode ser ainda mais granular do que eu pensava: A implementação do GraphQL pode, inicialmente, ser feita exclusivamente no frontend, deixando o back completamente REST. Para isso, basta criar **Resolvers** no frontend que fazem requests para a API REST.    
+Pelo que eu entendo, **Resolvers** são wrappers que armazenam o conhecimento de onde os Tipos do sistema são armazenados fisicamente; em outras palavras: **Resolvers** sabem onde buscar a informação sobre dado Tipo.
