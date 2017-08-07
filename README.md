@@ -52,3 +52,35 @@ Pelo que eu entendo, **Resolvers** são wrappers que armazenam o conhecimento de
 
 ## Day 4 (05/08)
 Nenhum conhecimento no adquirido.
+
+## Day 5 (06/08)
+Lendo um pouco da doc oficial, entendi que **Resolvers** geralmente mapeiam 1-1 com os campos de uma query, ou seja: um **Resolver** sabe como gerar apenas um campo de um Tipo, e não um Tipo inteiro. Isso abre possibilidades para que campos de um Tipo possam ficar em diferentes DBs, mas não sei quão prático/útil isso seria. 
+
+**Resolvers** são funções com a seguinte assinatura:
+```graphql
+human(obj, args, context) {
+   ...
+}
+```
+Os três argumentos que a função recebem são:
+* `obj` The previous object, which for a field on the root Query type is often not used.
+* `args` The arguments provided to the field in the GraphQL query.
+* `context` A value which is provided to every resolver and holds important contextual information like the currently logged in user, or access to a database.
+
+### Trivial Resolvers
+Para query simples como:
+```graphql
+{
+  human(id: 1002) {
+    name
+  }
+}
+```
+
+o resolver de `name` seria algo assim:
+```graphql
+name(obj, args, context) {
+  return obj.name
+}
+```
+o que é bem simples/trivial, então muitas libs de GraphQL deixam você omitir esses *trivial resolvers*
