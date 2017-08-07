@@ -46,6 +46,9 @@ Também aprendi que o Schema do GraphQL tem 3 **Root Types**:
 Já que falei de Schema, é bom explicar um pouco mais:    
 GraphQL depende de Schemas, que funcionam como contratos, para definir quais são as operações possíveis/permitidas. Um schema é fortemente tipado, ou seja, ele é composto de exclusivamente de Tipos bem definidos. Os 3 Tipos especiais já foram citados acima, de resto, qualquer coisa pode ser um Tipo, e deduzo que isso se mapeia direta mas não exclusivamente com os models/collections da sua aplicação.
 
-## Day 3
+## Day 3 (04/08)
 Ouvindo o podcast [GraphQL Radio](https://graphqlradio.com/), aprendi que a migração incremental REST -> GraphQL pode ser ainda mais granular do que eu pensava: A implementação do GraphQL pode, inicialmente, ser feita exclusivamente no frontend, deixando o back completamente REST. Para isso, basta criar **Resolvers** no frontend que fazem requests para a API REST.    
 Pelo que eu entendo, **Resolvers** são wrappers que armazenam o conhecimento de onde os Tipos do sistema são armazenados fisicamente; em outras palavras: **Resolvers** sabem onde buscar a informação sobre dado Tipo.
+
+## Day 4 (05/08)
+Nenhum conhecimento no adquirido.
