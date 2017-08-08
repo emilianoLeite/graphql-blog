@@ -84,3 +84,10 @@ name(obj, args, context) {
 }
 ```
 o que é bem simples/trivial, então muitas libs de GraphQL deixam você omitir esses *trivial resolvers*
+
+## Day 6 (07/08)
+Aprendi um pouco mais sobre GraphQL clients, e quais são suas propostas/objetivos. No geral os GraphQL clients se propõe a:
+* Abstrair a obtenção e armazenamento dos dados
+* Prover um serviço inteligente de caching
+  * Para fazer isso, os clients (pelo menos o [Apollo](http://dev.apollodata.com/core/how-it-works.html#query-benefits)) normalizam os resultados da query, geralmente usando o `id` retornado como identificador único de cada objeto da resposta. Mas me pergunto como isso funciona quando a query enviada não pede o `id` do objeto.
+* Otimizar queries e identificar erros de construção e sintaxe
