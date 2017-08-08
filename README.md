@@ -91,3 +91,39 @@ Aprendi um pouco mais sobre GraphQL clients, e quais são suas propostas/objetiv
 * Prover um serviço inteligente de caching
   * Para fazer isso, os clients (pelo menos o [Apollo](http://dev.apollodata.com/core/how-it-works.html#query-benefits)) normalizam os resultados da query, geralmente usando o `id` retornado como identificador único de cada objeto da resposta. Mas me pergunto como isso funciona quando a query enviada não pede o `id` do objeto.
 * Otimizar queries e identificar erros de construção e sintaxe
+
+## Day 7 (08/08)
+Aprendi sobre alguns mecanismos de segurança para evitar que queries maldosas derrubem ou atrasem o servidor GraphQL. Como os schemas GraphQL geralmente são gráficos cíclicos (ainda não sei exatamente o que isso quer dizer), é possível montar queries infinitas como:
+
+```graphql
+query IAmEvil {
+  author(id: "abc") {
+    posts {
+      author {
+        posts {
+          author {
+            posts {
+              author {
+                # that could go on as deep as the client wants!
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+Além dessas, muita queries aparentemente "simples" podem causar uma grande carga no server.
+
+Para evitar isso, alguns mecanismos de defesa geralmente utilizados são:
+* `Timeout`: Cancelar uma query que demora mais de X `ms`
+* `Maximum Query Depth`: Limite de quantos níveis de profundidade podem haver numa query
+* `Query Complexity`: Os desenvolvedores da API determinam qual a complexidade (custo) de cada campo de cada tipo, dando a eles uma pontuação normalizada. Uma query que excede a pontuação máxima determinada é bloqueada.
+* `Throttling`: Geralmente consiste em dar um "saldo" para os clientes e bloquear qualquer query feita depois que o saldo foi zerado. Esse saldo é restituído ao longo do tempo
+
+Esses mecanismos geralmente podem e devem ser utilizados em composição, para fornecer uma solução robusta e flexível.
+
+Alguns exemplos são:
+* `Throttling` **+** `Timeout` (na verdade Server Response Time): Dar um saldo de tempo ("x `ms`") para o cliente. Assim o cliente pode fazer algumas queries demoradas, ou várias queries rápidas. Essa composição não é ideal, pois é muito difícil pro cliente saber antecipadamente quanto cada query vai demorar.
+* `Throttling` **+** `Query Complexity`: Dar um saldo de pontos para o cliente. Assim o cliente pode fazer algumas queries complexas, ou várias queries simples. Essa composição é melhor que a anterior, pois o cliente consegue pré-calcular o custo de um query, podendo assim melhor administrar seu saldo. O [GitHub usa essa composição](https://developer.github.com/v4/guides/resource-limitations/).
