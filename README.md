@@ -127,3 +127,13 @@ Esses mecanismos geralmente podem e devem ser utilizados em composição, para f
 Alguns exemplos são:
 * `Throttling` **+** `Timeout` (na verdade Server Response Time): Dar um saldo de tempo ("x `ms`") para o cliente. Assim o cliente pode fazer algumas queries demoradas, ou várias queries rápidas. Essa composição não é ideal, pois é muito difícil pro cliente saber antecipadamente quanto cada query vai demorar.
 * `Throttling` **+** `Query Complexity`: Dar um saldo de pontos para o cliente. Assim o cliente pode fazer algumas queries complexas, ou várias queries simples. Essa composição é melhor que a anterior, pois o cliente consegue pré-calcular o custo de um query, podendo assim melhor administrar seu saldo. O [GitHub usa essa composição](https://developer.github.com/v4/guides/resource-limitations/).
+
+## Day 8 (09/08)
+Na site (que eu acho que é o) oficial do GraphQL, na página de [Schemas & Types](http://graphql.org/learn/schema/#type-system) não há menção ao tipo especial `subscription`; é apenas falado sobre `query` e `mutation`. Isso me leva a crer que a feature de `subscription` ainda não esteja completa, ou pelo menos ainda está em testes.
+
+A partir de amanhã pretendo colocar a mão na massa e tentar o começo de uma implementação GraphQL no projeto CERC, já que acabei a (curta) parte teórica do tutorial [How to GraphQL](https://www.howtographql.com/) e prefiro ficar experimentando com um projeto real em vez de um *[greenfield](https://en.wikipedia.org/wiki/Greenfield_project)*.
+
+Os passos pendentes (do [Day 1](#day-1-0208)) são:
+* Instalar alguma gem graphql e expor algum model através do GraphQL
+  * pretendo usar a (`gem graphql`)[http://graphql-ruby.org/getting_started]
+* Teste automatizado pra ver se tá funcionando mesmo
