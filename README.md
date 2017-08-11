@@ -137,3 +137,6 @@ Os passos pendentes (do [Day 1](#day-1-0208)) são:
 * Instalar alguma gem graphql e expor algum model através do GraphQL
   * pretendo usar a (`gem graphql`)[http://graphql-ruby.org/getting_started]
 * Teste automatizado pra ver se tá funcionando mesmo
+
+## Day 9 (10/08)
+Nenhum conhecimento no adquirido.
