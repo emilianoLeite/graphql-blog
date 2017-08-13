@@ -146,6 +146,11 @@ Nenhum conhecimento no adquirido.
   * pretendo usar a [gem graphql](http://graphql-ruby.org/getting_started)
 - [X] Teste automatizado pra ver se tá funcionando mesmo
 
-Depois de instalar a `gem graphql` e seguir os passos do [Getting Started](http://graphql-ruby.org/getting_started), tive um pouco de dificuldade em criar um campo `nfeValidations` no meu `QueryType`, mas no final acabei conseguindo. Também, depois de mais tentativas-e-erros,  consegui criar um teste de request automatizado pra garantir o funcionamento da query `nfeValidations`.    
+Depois de instalar a `gem graphql` e seguir os passos do [Getting Started](http://graphql-ruby.org/getting_started), tive um pouco de dificuldade em criar um campo `nfeValidations` no meu `QueryType`, mas no final acabei conseguindo. Também, depois de mais tentativas-e-erros,  consegui criar um teste de request automatizado pra garantir o funcionamento da query `nfeValidations`.   
 Mas aí fiquei com a dúvida se realmente é necessário criar testes para todas a queries criadas, ou se é possível confiar que o sistema de tipagem e schema do GraphQL são o suficiente pra acusar qualquer problema/inconsistência com as queries.
 
+## Day 11 (12/08)
+Instalei a [gem graphql-client](https://github.com/github/graphql-client] no `painel Admin` e, usando o [ngrok](https://ngrok.com), consegui fazer a query `nfeValidations` previamente criada no `core`.     
+Próximos passos: 
+- [ ] `Core` - criar uma query para representar o show de uma `NfeValidation`;
+- [ ] `Admin` - Na action `Admin::NfeValidationsController#show`, em vez usar o `CERCClient`, obter os dados da `NfeValidation` atráves da `graphql-client`.
