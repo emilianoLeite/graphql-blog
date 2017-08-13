@@ -26,8 +26,8 @@ Prevejo que o maior problema vai ser instalar/setar o mongo na máquina da Cloud
 Aparentemente não houveram problemas pra instalar o mongo (awyiss).
 
 Os próximos passos são:
-* Instalar alguma gem graphql e expor algum model através do GraphQL
-* Teste automatizado pra ver se tá funcionando mesmo
+- [ ] Instalar alguma gem graphql e expor algum model através do GraphQL
+- [ ] Teste automatizado pra ver se tá funcionando mesmo
 
 ## Day 2 (03/08)
 Acho que conseguiria instalar a gem e ir tentando até ter algo minimamente funcional, mas se a base teórica por trás, não conseguiria explicar pra ninguém as motivações e considerações a se tomar numa migração para GraphQL. Portanto nos dias seguintes pretendo estar a std-doc do GraphQL pra me familiarizar com os termos e entender um pouco mais sobre as motivações e objetivos do GraphQL, antes de sair codando.
@@ -134,9 +134,18 @@ Na site (que eu acho que é o) oficial do GraphQL, na página de [Schemas & Type
 A partir de amanhã pretendo colocar a mão na massa e tentar o começo de uma implementação GraphQL no projeto CERC, já que acabei a (curta) parte teórica do tutorial [How to GraphQL](https://www.howtographql.com/) e prefiro ficar experimentando com um projeto real em vez de um *[greenfield](https://en.wikipedia.org/wiki/Greenfield_project)*.
 
 Os passos pendentes (do [Day 1](#day-1-0208)) são:
-* Instalar alguma gem graphql e expor algum model através do GraphQL
-  * pretendo usar a (`gem graphql`)[http://graphql-ruby.org/getting_started]
-* Teste automatizado pra ver se tá funcionando mesmo
+- [ ] Instalar alguma gem graphql e expor algum model através do GraphQL
+  * pretendo usar a [gem graphql](http://graphql-ruby.org/getting_started)
+- [ ] Teste automatizado pra ver se tá funcionando mesmo
 
 ## Day 9 (10/08)
 Nenhum conhecimento no adquirido.
+
+## Day 10 (11/08)
+- [X] Instalar alguma gem graphql e expor algum model através do GraphQL
+  * pretendo usar a [gem graphql](http://graphql-ruby.org/getting_started)
+- [X] Teste automatizado pra ver se tá funcionando mesmo
+
+Depois de instalar a `gem graphql` e seguir os passos do [Getting Started](http://graphql-ruby.org/getting_started), tive um pouco de dificuldade em criar um campo `nfeValidations` no meu `QueryType`, mas no final acabei conseguindo. Também, depois de mais tentativas-e-erros,  consegui criar um teste de request automatizado pra garantir o funcionamento da query `nfeValidations`.    
+Mas aí fiquei com a dúvida se realmente é necessário criar testes para todas a queries criadas, ou se é possível confiar que o sistema de tipagem e schema do GraphQL são o suficiente pra acusar qualquer problema/inconsistência com as queries.
+
