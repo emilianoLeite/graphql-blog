@@ -208,7 +208,16 @@ eu tomava o seguinte erro:
 {"errors"=>[{"message"=>"Parse error on \")\" (RPAREN) at [2, 52]", "locations"=>[{"line"=>2, "column"=>52}]}]}
 ```
 
-eu pensei que ` \")\" (RPAREN)` queria dizer que eu não tinha fechado corretamente os parentesis ou algo assim, mas depois de um triple-check não achei nada de errado. Então resolvi copiar a query de exemplo do [Getting Started](http://graphql-ruby.org/getting_started) e funcionou: em vez de tomar esse erro de parsing, tomei o `Mongoid::Errors::DocumentNotFound` para o id `1`. Então o problema era com o id, não com os parentesis. Pensei que talvez o `types.ID` da gem `graphql` não funcionasse com os ids do mongo, então tentei mudar o argumento da query pra ser `types.String`. Tentei passar o `nfe_validation.id.to_s`, mas tomei o mesmo erro `"Parse error on \")\" (RPAREN)`. Passei então `"{nfeValidation(id: abc) {id}}"` e tomei o erro `"Argument 'id' on Field 'nfeValidation' has an invalid value. Expected type 'String!'."`. Bingo. Tentei `"{nfeValidation(id: 'abcjnh') {id}}"`, mas tomei`"Parse error on \"'\" (error)`. Tentei `"{nfeValidation(id: \"abcjnh\") {id}}"` e finalmente tomei `Mongoid::Errors::DocumentNotFound`. Reverti o tipo do argumento da query pra `types.ID` e tomei o mesmo erro; e uma vez que eu passei um `id` válido, a query funcionou (feelsgoodman).
+eu pensei que ` \")\" (RPAREN)` queria dizer que eu não tinha fechado corretamente os parentesis ou algo assim, mas depois de um triple-check não achei nada de errado.    
+Então resolvi copiar a query de exemplo do [Getting Started](http://graphql-ruby.org/getting_started) e funcionou: em vez de tomar esse erro de parsing, tomei o `Mongoid::Errors::DocumentNotFound` para o id `1`.     
+Então o problema era com o id, não com os parentesis.   
+Pensei que talvez o `types.ID` da gem `graphql` não funcionasse com os ids do mongo, então tentei mudar o argumento da query pra ser `types.String`.     
+Tentei passar o `nfe_validation.id.to_s`, mas tomei o mesmo erro `"Parse error on \")\" (RPAREN)`.   
+Passei então `"{nfeValidation(id: abc) {id}}"` e tomei o erro `"Argument 'id' on Field 'nfeValidation' has an invalid value. Expected type 'String!'."`.    
+**Bingo**.     
+Tentei `"{nfeValidation(id: 'abcjnh') {id}}"`, mas tomei`"Parse error on \"'\" (error)`.     
+Tentei `"{nfeValidation(id: \"abcjnh\") {id}}"` e finalmente tomei `Mongoid::Errors::DocumentNotFound`.    
+Reverti o tipo do argumento da query pra `types.ID` e tomei o mesmo erro; e uma vez que eu passei um `id` válido, a query funcionou (feelsgoodman).
 
 ### TL;DR
 Pra `ids` não-decimais, é necessário envolver o `id` com aspas; aspas simples não servem, apenas aspas duplas.
