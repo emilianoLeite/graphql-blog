@@ -154,3 +154,61 @@ Instalei a [gem graphql-client](https://github.com/github/graphql-client] no `pa
 Próximos passos: 
 - [ ] `Core` - criar uma query para representar o show de uma `NfeValidation`;
 - [ ] `Admin` - Na action `Admin::NfeValidationsController#show`, em vez usar o `CERCClient`, obter os dados da `NfeValidation` atráves da `graphql-client`.
+
+## Day 12 (13/08)
+Talvez o endpoint de show de uma `NfeValidation` não seja o melhor lugar pra começar, **muitos** dados são devolvidos. Mas vou me ater a ele mesmo, porque me dará a chance de trabalhar com as  `Interfaces` do GraphQL (acho).
+Tive um pouco de dificuldade para criar a query `nfeValidation(id: ID)` :
+* Na query anterior (`nfeValidations`) eu declarava o tipo dela como um segundo argumento, antes de passar o bloco:
+```ruby
+ field :nfeValidations, types[Types::NfeValidationType] do
+   ...
+ end
+```
+
+* Mas como a nova query (`nfeValidation(id: ID)`) retorna apenas 1 record, me baseei na query gerada no scaffold:
+```ruby
+field :testField, types.String do
+  description "An example field added by the generator"
+  resolve ->(obj, args, ctx) {
+    "Hello World!"
+  }
+end
+```
+e tentei usar a assinatura:
+```ruby
+ field :nfeValidation, types.Types::NfeValidationType do
+   ...
+ end
+ ``` 
+ mas ao tentar executar a query, tomava esse erro:
+ ```ruby
+ NoMethodError: undefined method `Types' for #<GraphQL::Define::TypeDefiner:0x0000000933ca80>
+ ```
+ 
+então passei a declaração do tipo pra dentro do bloco, que nem um exemplo do [Getting Started](http://graphql-ruby.org/getting_started):
+```ruby
+field :nfeValidation do
+  type Types::NfeValidationType
+  argument :id, !types.ID
+  resolve ->(obj, args, ctx) { NfeValidation.find(args['id']) }
+end
+```
+e finalmente funcionou;
+* Mas aí, ao tentar executar a query:
+```ruby
+"
+{
+  nfeValidation(id:#{nfe_validation.id.to_s}) {
+    id
+  }
+}"
+```
+eu tomava o seguinte erro:
+```ruby
+{"errors"=>[{"message"=>"Parse error on \")\" (RPAREN) at [2, 52]", "locations"=>[{"line"=>2, "column"=>52}]}]}
+```
+
+eu pensei que ` \")\" (RPAREN)` queria dizer que eu não tinha fechado corretamente os parentesis ou algo assim, mas depois de um triple-check não achei nada de errado. Então resolvi copiar a query de exemplo do [Getting Started](http://graphql-ruby.org/getting_started) e funcionou: em vez de tomar esse erro de parsing, tomei o `Mongoid::Errors::DocumentNotFound` para o id `1`. Então o problema era com o id, não com os parentesis. Pensei que talvez o `types.ID` da gem `graphql` não funcionasse com os ids do mongo, então tentei mudar o argumento da query pra ser `types.String`. Tentei passar o `nfe_validation.id.to_s`, mas tomei o mesmo erro `"Parse error on \")\" (RPAREN)`. Passei então `"{nfeValidation(id: abc) {id}}"` e tomei o erro `"Argument 'id' on Field 'nfeValidation' has an invalid value. Expected type 'String!'."`. Bingo. Tentei `"{nfeValidation(id: 'abcjnh') {id}}"`, mas tomei`"Parse error on \"'\" (error)`. Tentei `"{nfeValidation(id: \"abcjnh\") {id}}"` e finalmente tomei `Mongoid::Errors::DocumentNotFound`. Reverti o tipo do argumento da query pra `types.ID` e tomei o mesmo erro; e uma vez que eu passei um `id` válido, a query funcionou (feelsgoodman).
+
+### TL;DR
+Pra `ids` não-decimais, é necessário envolver o `id` com aspas; aspas simples não servem, apenas aspas duplas.
