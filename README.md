@@ -204,6 +204,7 @@ e finalmente funcionou;
 }"
 ```
 eu tomava o seguinte erro:
+
 ```ruby
 {"errors"=>[{"message"=>"Parse error on \")\" (RPAREN) at [2, 52]", "locations"=>[{"line"=>2, "column"=>52}]}]}
 ```
@@ -221,3 +222,39 @@ Reverti o tipo do argumento da query pra `types.ID` e tomei o mesmo erro; e uma 
 
 ### TL;DR
 Pra `ids` não-decimais, é necessário envolver o `id` com aspas; aspas simples não servem, apenas aspas duplas.
+
+## Day 13 (14/08)
+Definitivamente começar pelo endpoint do show da Validação não foi uma boa idéia. O endpoint devolve uma quantidade massiva de dados, o que vai demorar muito pra ser convertido em GraphQL Schemas. 
+
+Muitos dos dados devolvidos estão contidos em campos do tipo `Hash`. Como os Trivial Resolvers da gem `graphql` tentam acessar os campos como métodos em um objeto
+
+```ruby
+# Exemplo:
+
+Types::NfeValidationType = GraphQL::ObjectType.define do
+  name "NfeValidation"
+  field :id, !types.ID # => Tentará acessar nfe_validation.id
+end
+```
+eu pensei que teria que criar os resolvers pra acessar chaves do `Hash` na mão:
+
+```ruby
+# Exemplo:
+
+Types::RecebivelType = GraphQL::ObjectType.define do
+  name "Recebivel"
+  field :tipo, !types.String do
+    resolve ->(obj, args, ctx) { obj[:tipo] }
+  end
+end
+```
+
+mas depois de dar uma pesquisada na [API da gem](http://www.rubydoc.info/gems/graphql/1.6.6/), achei como [declarar chaves de um `Hash` como Trivial Resolvers](http://www.rubydoc.info/gems/graphql/1.6.6/GraphQL/Field):
+```ruby
+# Exemplo:
+
+Types::RecebivelType = GraphQL::ObjectType.define do
+  name "Recebivel"
+  field :tipo, !types.String, hash_key: :tipo
+end
+
