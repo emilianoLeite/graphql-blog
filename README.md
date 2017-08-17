@@ -257,4 +257,7 @@ Types::RecebivelType = GraphQL::ObjectType.define do
   name "Recebivel"
   field :tipo, !types.String, hash_key: :tipo
 end
+```
 
+## Day 14 (15/08)
+Nenhum conhecimento no adquirido.
