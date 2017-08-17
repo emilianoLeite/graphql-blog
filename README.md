@@ -261,3 +261,6 @@ end
 
 ## Day 14 (15/08)
 Nenhum conhecimento no adquirido.
+
+## Day 15 (16/08)
+Nenhum conhecimento no adquirido.
