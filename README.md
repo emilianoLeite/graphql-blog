@@ -264,3 +264,65 @@ Nenhum conhecimento no adquirido.
 
 ## Day 15 (16/08)
 Nenhum conhecimento no adquirido.
+
+## Day 16 (17/08)
+Continuo mapeando a resposta (gigante) do endpoint de show da validação
+
+Uma parte da resposta é:
+```ruby
+'recebivel' => {
+  'partes' => {
+    'originador' => {
+      'documento' => { 'identificador' => { 'numero' => '10.418.053/0001-80' } }
+    },
+    'pagador' => {
+      'documento' => { 'identificador' => { 'numero' => '10.418.053/0001-80' } }
+    }
+  },
+  # ...
+}
+```
+
+Eu comecei a mapear isso pro Schema da seguinte maneira:
+
+```ruby
+Types::RecebivelType = GraphQL::ObjectType.define do
+  name "Recebivel"
+  field :partes, Types::PartiesType, hash_key: :partes
+end
+
+Types::PartiesType = GraphQL::ObjectType.define do
+  name "Partes"
+  field :originador, Types::LegalPersonType, hash_key: :originador
+  field :pagador, Types::LegalPersonType, hash_key: :pagador
+end
+
+Types::LegalPersonType = GraphQL::ObjectType.define do
+  name "Pessoa Jurídica"
+  field :documento, Types::PartiesType::DocumentType, hash_key: :documento
+end
+
+Types::PartiesType::DocumentType = GraphQL::ObjectType.define do
+  name 'Documento da Parte'
+  field :identificador, !Types::IdentifierType, hash_key: :identificador
+  field :tipo, !types.String, hash_key: :tipo
+end
+
+Types::IdentifierType = GraphQL::ObjectType.define do
+  name 'Identificador'
+  field :numero, !types.String, hash_key: :numero
+end
+```
+
+Declarei `Types::PartiesType::DocumentType` pra indicar que esse é um tipo que só vai acontecer dentro da exibição das partes.   
+Mas isso deu o erro:
+```ruby
+TypeError:
+  Partes is not a class/module
+```
+
+Ou seja: por algum motivo esse usou o `name` do `PartiesType` pra tentar scopar o `DocumentType`.   
+Mudei pra `Types::PartyDocumentType` e tudo funcionou, e pretendo deixar assim por enquanto.
+
+Fica pendente, então, descobrir a melhor maneira de declarar "tipos embeddados", tipos que só fazem sentido dentro de outros.   
+Se bem que todos os tipos desse schema são especificos pra validação, até certo ponto.
