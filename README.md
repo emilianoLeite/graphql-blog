@@ -325,4 +325,5 @@ Ou seja: por algum motivo esse usou o `name` do `PartiesType` pra tentar scopar 
 Mudei pra `Types::PartyDocumentType` e tudo funcionou, e pretendo deixar assim por enquanto.
 
 Fica pendente, então, descobrir a melhor maneira de declarar "tipos embeddados", tipos que só fazem sentido dentro de outros.   
-Se bem que todos os tipos desse schema são especificos pra validação, até certo ponto.
+Se bem que todos os tipos desse schema são especificos pra validação, até certo ponto.    
+Esse é um dos problemas que não estou gostando: como esse endpoint devolve muitos dados, com vários níveis de profundidade, estou tendo que criar vários Tipos especializados, não reaproveitáveis, já que uma query GraphQL sempre tem que acabar em um Tipo `Scalar`. Talvez estou tendo esse problema pois as entidades não foram modeladas com GraphQL em mente. Mas fica de aviso que esse pode ser um problema recorrente na migração de projetos pra GraphQL.
