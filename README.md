@@ -332,3 +332,23 @@ Esse é um dos problemas que não estou gostando: como esse endpoint devolve mui
 Nenhum conhecimento no adquirido.
 
 
+## Day 18 (19/08)
+Estou tendo dificuldades em traduzir o output inteiro do show da validação. Estou tentando entender como o `Serializer`  esta gerando todas as chaves, mas apenas lendo os métodos não esta sendo produtivo. Esse endpoint tem uma combinação de `Adapter` e `Serializer` que dificulta muito o entendimento do fluxo dos dados. Resolvi subir o `front` e o `back` e colocar um `debugger` no `Serializer` pra ver exatamente o que um  método estava recebendo. Mas ao subir o `front` (que automaticamente faz uma `IntrospectionQuery`), o seguinte erro ocorreu:
+```ruby
+/home/emiliano/.rvm/gems/ruby-2.3.4@cerc_admin_panel/gems/graphql-client-0.12.1/lib/graphql/client/schema.rb:51:in `const_set': wrong constant name Documento Fiscal (NameError)
+``` 
+o que estava relacionado com o Tipo:
+``` 
+Types::FiscalDocumentType = GraphQL::ObjectType.define do
+  name 'Documento Fiscal'
+  field :identificador, Types::IdentifierType, hash_key: :identificador
+  field :url_do_arquivo, !types.String, hash_key: :url
+  field :tipo, !types.String, hash_key: :tipo
+  # field :fatura, Types::FaturaType, hash_key: :fatura
+  # field :duplicatas, types[Types::DuplicataType], hash_key: :duplicatas
+end
+``` 
+e depois de um pouco de `debugging`, entendi que a propriedade `name` do tipo estava tentando ser "constantizada".    
+Apos mudar o `name`  pra `"DocumentoFiscal"`, tudo funcionou. Parece que esse `name`, e não a constante `Types::FiscalDocumentType`, eh o que identifica o Tipo no schema GraphQL.
+
+
