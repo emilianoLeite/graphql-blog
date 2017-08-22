@@ -325,12 +325,12 @@ Ou seja: por algum motivo esse usou o `name` do `PartiesType` pra tentar scopar 
 Mudei pra `Types::PartyDocumentType` e tudo funcionou, e pretendo deixar assim por enquanto.
 
 Fica pendente, então, descobrir a melhor maneira de declarar "tipos embeddados", tipos que só fazem sentido dentro de outros.   
+
 Se bem que todos os tipos desse schema são especificos pra validação, até certo ponto.    
 Esse é um dos problemas que não estou gostando: como esse endpoint devolve muitos dados, com vários níveis de profundidade, estou tendo que criar vários Tipos especializados, não reaproveitáveis, já que uma query GraphQL sempre tem que acabar em um Tipo `Scalar`. Talvez estou tendo esse problema pois as entidades não foram modeladas com GraphQL em mente. Mas fica de aviso que esse pode ser um problema recorrente na migração de projetos pra GraphQL.
 
 ## Day 17 (18/08)
 Nenhum conhecimento no adquirido.
-
 
 ## Day 18 (19/08)
 Estou tendo dificuldades em traduzir o output inteiro do show da validação. Estou tentando entender como o `Serializer`  esta gerando todas as chaves, mas apenas lendo os métodos não esta sendo produtivo. Esse endpoint tem uma combinação de `Adapter` e `Serializer` que dificulta muito o entendimento do fluxo dos dados. Resolvi subir o `front` e o `back` e colocar um `debugger` no `Serializer` pra ver exatamente o que um  método estava recebendo. Mas ao subir o `front` (que automaticamente faz uma `IntrospectionQuery`), o seguinte erro ocorreu:
@@ -351,4 +351,7 @@ end
 e depois de um pouco de `debugging`, entendi que a propriedade `name` do tipo estava tentando ser "constantizada".    
 Apos mudar o `name`  pra `"DocumentoFiscal"`, tudo funcionou. Parece que esse `name`, e não a constante `Types::FiscalDocumentType`, eh o que identifica o Tipo no schema GraphQL.
 
-
+## Day 19 (20/08)
+Nenhum conhecimento no adquirido.
+## Day 20 (21/08)
+Nenhum conhecimento no adquirido.
