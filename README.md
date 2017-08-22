@@ -355,3 +355,46 @@ Apos mudar o `name`  pra `"DocumentoFiscal"`, tudo funcionou. Parece que esse `n
 Nenhum conhecimento no adquirido.
 ## Day 20 (21/08)
 Nenhum conhecimento no adquirido.
+## Day 21 (22/08)
+Consegui adicionar o campo `unidade` no Tipo de `Pessoa_Jurídica`. Foi um problema complicado de resolver, pois esse campo acessa um valor que não está dentro do `recebível`.
+
+Recapitulando:
+- Uma NF-e tem `n` duplicatas (`recebíveis`) e `2` `partes` (`originador` e `pagador`)
+  - As informações de `recebível`, `originador` e `pagador` tem o mesmo nível hierarquico dentro do model `NfeValidation`
+- O show da validação trata da validação de um dos `recebíveis` da NF-e
+
+Do jeito que o show está sendo montado, as informações das `partes` estão sendo representadas dentro do `recebivel`. Como essas informações não estão presentes no `recebivel_hash`, quebrei um pouco a cabeça pra decidir como acessá-las. Não sabia se fazia sentido um Tipo "filho" precisar acessar informações de um "pai". Talvez numa aplicação *greenfield* isso de fato não aconteça, mas como estou fazendo uma migração, não tenho muita escolha sobre isso, preciso devolver exatamente igual o endpoint atual. Procurei no Stack Overflow, e parece que o `context` (terceiro argumento passado pros Resolvers) é o melhor lugar pra guardar essa informação.
+
+A primeira versão ficou assim:
+
+```ruby
+Types::NfeValidationType = GraphQL::ObjectType.define do
+  name 'NfeValidation'
+  field :id, !types.ID
+  field :recebivel, Types::RecebivelType do
+    resolve ->(obj, args, ctx) do
+      adapted_validation = ValidationV1ToV2Adapter.new(obj)
+
+      ctx['validation_root'] = adapted_validation
+
+      adapted_validation.recebivel
+    end
+  end
+end
+
+...
+
+Types::LegalPersonType = GraphQL::ObjectType.define do
+  name 'Pessoa_Jurídica'
+  field :documento, Types::PartyDocumentType, hash_key: :documento
+  field :unidade, types.String do
+    resolve ->(obj, args, ctx) do
+      ctx['validation_root'].buyer.attributes['matriz_filial']
+    end
+  end
+end
+```
+
+O problema é que qualquer campo do `Types::NfeValidationType` que ao longo da sua árvore (ou seria gráfico?) expôr o campo `unidade` vai precisar inserir o objeto "raíz" (`adapted_validation` neste caso) no `context`.
+
+Outro ponto que pretendo melhorar é o fato de precisar usar o `ValidationV1ToV2Adapter` pra expor todos os métodos necessários. Ao meu ver deveria ser possível montar o schema apenas com o model "`vanilla`", sem `adapters` ou `presenters`.
