@@ -353,9 +353,8 @@ Apos mudar o `name`  pra `"DocumentoFiscal"`, tudo funcionou. Parece que esse `n
 
 ## Day 19 (20/08)
 Nenhum conhecimento no adquirido.
+
 ## Day 20 (21/08)
-Nenhum conhecimento no adquirido.
-## Day 21 (22/08)
 Consegui adicionar o campo `unidade` no Tipo de `Pessoa_Jurídica`. Foi um problema complicado de resolver, pois esse campo acessa um valor que não está dentro do `recebível`.
 
 Recapitulando:
@@ -398,3 +397,51 @@ end
 O problema é que qualquer campo do `Types::NfeValidationType` que ao longo da sua árvore (ou seria gráfico?) expôr o campo `unidade` vai precisar inserir o objeto "raíz" (`adapted_validation` neste caso) no `context`.
 
 Outro ponto que pretendo melhorar é o fato de precisar usar o `ValidationV1ToV2Adapter` pra expor todos os métodos necessários. Ao meu ver deveria ser possível montar o schema apenas com o model "`vanilla`", sem `adapters` ou `presenters`.
+
+## Day 21 (22/08)
+Consegui remover o `ValidationV1ToV2Adapter`.
+
+Ficou assim:
+```ruby
+Types::NfeValidationType = GraphQL::ObjectType.define do
+  name 'NfeValidation'
+  field :id, !types.ID
+  field :recebivel, Types::RecebivelType do
+    resolve ->(obj, args, ctx) do
+      ctx['validation_root'] = obj
+      recebivel = obj.recebivel_hash
+      ctx['recebivel_root'] = recebivel
+
+      recebivel
+    end
+  end
+end
+
+Types::RecebivelType = GraphQL::ObjectType.define do
+  name 'Recebivel'
+  # ...
+  field :partes, Types::PartiesType, hash_key: :partes
+end
+
+Types::PartiesType = GraphQL::ObjectType.define do
+  name 'Partes'
+  field :originador, Types::LegalPersonType do
+    resolve -> (obj, args, ctx) do
+      ctx['validation_root'].buyer_data['data']
+        .merge(ctx['recebivel_root']['partes']['originador']) # HACK
+    end
+  end
+end
+
+Types::LegalPersonType = GraphQL::ObjectType.define do
+  name 'Pessoa_Jurídica'
+  field :documento, Types::PartyDocumentType, hash_key: :documento
+  field :unidade, types.String, hash_key: :matriz_filial
+  # ...
+end
+```
+
+Ainda precisei fazer um "hack" pra montar o campo `documento` corretamente, já que as informações desse campo estão no `recebível`, não no `buyer_data`. Mas como praticamente todos os outros campos do `Types::LegalPersonType` estão no `buyer_data`, acho que a implementação atual faz bem mais sentido.
+
+---
+Depois tenho que ver se faz sentido ter esse namespace `Types` pra todos os Tipos.
