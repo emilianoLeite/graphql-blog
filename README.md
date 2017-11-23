@@ -1,4 +1,4 @@
-[Blog](https://emilianoleite.github.io/toy-graphql/)
+[Blog](https://emilianoleite.github.io/graphql-blog/)
 
 [Core - Cloud9 IDE](https://ide.c9.io/emilianoleite/cerc-core-graphql)
 
